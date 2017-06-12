@@ -2,12 +2,29 @@
 
 #:include music.kv
 
+<Widget>:
+    font_size: 25
+
 [BigButton@Button]:
     text: ctx.text if hasattr(ctx, 'text') else ''
     font_size: 20
     markup: True
 
-<MainScreen>:
+<MenuScreen>:
+    BoxLayout:
+        GridLayout:
+            cols: 2
+            Button:
+                text: 'Music'
+                on_release: app.root.setScreen('music')
+            BigButton:
+                text: 'Navigation'
+            BigButton:
+                text: 'Settings'
+            TextInput:
+                text: 'hello'
+
+<RootWidget>:
     BoxLayout:
         id: top_layout
         orientation: 'vertical'
@@ -20,24 +37,17 @@
 
             Label:
                 id: clock
-                text: 'clock'
+                text: ''
             Label:
                 text: 'Top Bar'
             Button:
                 size_hint: 0.2,1
                 text: 'Home'
-                
-        
-        GridLayout:
-            cols: 2
-
-            BigButton:
-                text: 'Music'
-                on_press: root.manager.current = 'music' 
-            BigButton:
-                text: 'Navigation'
-            BigButton:
-                text: 'Settings'
-            TextInput:
-                text: 'hello'
-
+                on_release: app.root.setScreen('menu')
+ 
+        ScreenManager:
+            id: screen_manager
+            MenuScreen:
+                name: "menu"
+            MusicScreen:
+                name: "music"
