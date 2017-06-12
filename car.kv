@@ -1,0 +1,43 @@
+#:kivy 1.9.1
+
+#:include music.kv
+
+[BigButton@Button]:
+    text: ctx.text if hasattr(ctx, 'text') else ''
+    font_size: 20
+    markup: True
+
+<MainScreen>:
+    BoxLayout:
+        id: top_layout
+        orientation: 'vertical'
+        size: self.parent.size
+
+        BoxLayout:
+            id: toolbar_layout
+            orientation: 'horizontal'
+            size_hint: 1,0.2
+
+            Label:
+                id: clock
+                text: 'clock'
+            Label:
+                text: 'Top Bar'
+            Button:
+                size_hint: 0.2,1
+                text: 'Home'
+                
+        
+        GridLayout:
+            cols: 2
+
+            BigButton:
+                text: 'Music'
+                on_press: root.manager.current = 'music' 
+            BigButton:
+                text: 'Navigation'
+            BigButton:
+                text: 'Settings'
+            TextInput:
+                text: 'hello'
+
