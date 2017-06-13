@@ -1,7 +1,45 @@
-#:kivy 1.9.1
+#:kivy 1.10.1
 
 <MusicScreen>
-    Button:
-        text: 'back'
+    BoxLayout:
+        BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+                size_hint: 1,0.1
+                Label:
+                    size_hint: 0.3,1
+                    text: 'Search'
+                TextInput:
+                    text: ''
+                    multiline: False
+            BoxLayout:
+                ScrollView:
+                    ListView:
+                        item_strings: [str(index) for index in range(100)]
+                #MusicFileView:
+                    #viewclass: 'Label'
+                    
+                    #BoxLayout:
+                    #RecycleBoxLayout:
+                        #default_size: None, dp(56)
+                        #default_size_hint: 1, None
+                        #height: self.minimum_height
+                        #orientation: 'vertical'
+        BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+                padding: 20
+                AsyncImage:
+                    allow_stretch: True
+                    keep_ratio: True
+                    source: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Nikon_D810_EM1B6357-2.jpg/273px-Nikon_D810_EM1B6357-2.jpg' 
+            BoxLayout:
+                size_hint: 1,0.2
+                Button:
+                    text: 'Prev'
+                Button:
+                    text: 'Play'
+                Button:
+                    text: 'Next'
 
 

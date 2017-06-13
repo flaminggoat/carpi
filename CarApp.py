@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+
+import time
+
+from Music import *
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
@@ -8,9 +13,6 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.lang import Builder
 
-import time
-
-#Builder.load_file("car.kv")
 
 class RootWidget(Widget):
     def __init__(self, **kwargs):
@@ -22,8 +24,8 @@ class RootWidget(Widget):
     def setScreen(self, newScreen):
         self.ids.screen_manager.current = newScreen
 
-class MusicScreen(Screen):
-    pass
+#class MusicScreen(Screen):
+#    pass
 
 class MenuScreen(Screen):
     pass
