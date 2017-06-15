@@ -1,5 +1,15 @@
 #:kivy 1.10.1
 
+<MusicFileBar>
+    Label:
+        text: self.parent.title
+    Button:
+        size_hint: 0.1, 1
+        text: '>'
+    Button:
+        size_hint: 0.1, 1
+        text: '+'
+
 <MusicScreen>
     BoxLayout:
         BoxLayout:
@@ -13,18 +23,16 @@
                     text: ''
                     multiline: False
             BoxLayout:
-                ScrollView:
-                    ListView:
-                        item_strings: [str(index) for index in range(100)]
-                #MusicFileView:
-                    #viewclass: 'Label'
-                    
-                    #BoxLayout:
-                    #RecycleBoxLayout:
-                        #default_size: None, dp(56)
-                        #default_size_hint: 1, None
-                        #height: self.minimum_height
-                        #orientation: 'vertical'
+                MusicFileView:
+                    viewclass: 'MusicFileBar'
+                    scroll_type: ['bars', 'content']
+                    data: self.files
+                    RecycleBoxLayout:
+                        default_size: None, dp(56)
+                        default_size_hint: 1, None
+                        size_hint_y: None
+                        height: self.minimum_height
+                        orientation: 'vertical'
         BoxLayout:
             orientation: 'vertical'
             BoxLayout:
@@ -32,7 +40,7 @@
                 AsyncImage:
                     allow_stretch: True
                     keep_ratio: True
-                    source: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Nikon_D810_EM1B6357-2.jpg/273px-Nikon_D810_EM1B6357-2.jpg' 
+                    source: 'cassette.png' 
             BoxLayout:
                 size_hint: 1,0.2
                 Button:

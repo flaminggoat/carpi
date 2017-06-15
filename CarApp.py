@@ -24,9 +24,6 @@ class RootWidget(Widget):
     def setScreen(self, newScreen):
         self.ids.screen_manager.current = newScreen
 
-#class MusicScreen(Screen):
-#    pass
-
 class MenuScreen(Screen):
     pass
 
