@@ -6,6 +6,7 @@
     Button:
         size_hint: 0.1, 1
         text: '>'
+        on_release: self.parent.play()
     Button:
         size_hint: 0.1, 1
         text: '+'
@@ -22,31 +23,44 @@
                 TextInput:
                     text: ''
                     multiline: False
+                    on_text_validate: root.ids.music_file_view.filter(self.text)
             BoxLayout:
                 MusicFileView:
+                    id: music_file_view
                     viewclass: 'MusicFileBar'
                     scroll_type: ['bars', 'content']
                     data: self.files
                     RecycleBoxLayout:
+                        id: music_file_view_layout
                         default_size: None, dp(56)
                         default_size_hint: 1, None
                         size_hint_y: None
                         height: self.minimum_height
                         orientation: 'vertical'
+            Button:
+                text: 'Play all'
+                size_hint: 1,0.1
         BoxLayout:
             orientation: 'vertical'
             BoxLayout:
+                orientation: 'vertical'
                 padding: 20
                 AsyncImage:
                     allow_stretch: True
                     keep_ratio: True
-                    source: 'cassette.png' 
+                    source: 'cassette.png'
+                Label:
+                    size_hint: 1, 0.1
+                    id: now_playing_label
+                    text: '' 
             BoxLayout:
                 size_hint: 1,0.2
                 Button:
                     text: 'Prev'
                 Button:
+                    id: play_button
                     text: 'Play'
+                    on_release: root.play_pause()
                 Button:
                     text: 'Next'
 
