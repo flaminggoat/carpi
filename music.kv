@@ -3,6 +3,10 @@
 <MusicFileBar>
     Label:
         text: self.parent.title
+        text_size: self.size
+        halign: 'left'
+        shorten: True
+        shorten_from: 'right'
     Button:
         size_hint: 0.1, 1
         text: '>'
@@ -10,6 +14,7 @@
     Button:
         size_hint: 0.1, 1
         text: '+'
+        on_release: root.play(True)
 
 <MusicScreen>
     BoxLayout:
@@ -52,7 +57,9 @@
                 Label:
                     size_hint: 1, 0.1
                     id: now_playing_label
-                    text: '' 
+                Label:
+                    size_hint: 1, 0.1
+                    id: now_playing_artist 
             BoxLayout:
                 size_hint: 1,0.2
                 Button:
@@ -63,5 +70,6 @@
                     on_release: root.play_pause()
                 Button:
                     text: 'Next'
+                    on_release: root.play()
 
 

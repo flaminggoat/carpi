@@ -12,9 +12,16 @@ music_screen = None
 class MusicFileBar(BoxLayout):
     title = StringProperty("")
     path = StringProperty("")
-    def play(self):
+    def play(self, play_next=False):
         global music_screen
-        music_screen.play(self.path, self.title)
+        f = {}
+        f['path'] = self.path
+        f['title'] = self.title
+        f['artist'] = self.artist
+        if play_next:
+            music_screen.play_next(f)
+            return
+        music_screen.play_now(f)
         
 class MusicFileView(RecycleView):
     def __init__(self, **kwargs):
@@ -52,39 +59,61 @@ class MusicScreen(Screen):
         global music_screen
         music_screen = self
         self.audio = None
-        self.audio_path = None
-        self.audio_title = None
+        self.audio_list = []
         self.audio_pos = 0
     def update(self, dt):
         pass
-    def play(self, path=None, title=None):
-        if path is None:
-            path = self.audio_path
-            title = self.audio_title
+    def play_now(self, audio_file):
+        self.audio_list.insert(0, audio_file)
+        self.play()
+    def play_next(self, audio_file):
+        self.audio_list.insert(0, audio_file)
+    def play(self, obj=None):
+        if len(self.audio_list) <= 0:
+            #end of song queue reached
+            if self.audio.state != 'play':
+                self.ids.play_button.text = 'Play'
+            return
+        f = self.audio_list.pop(0)
         if self.audio:
+            self.audio.unbind(on_stop=self.play)
             self.audio.stop()
             self.audio.unload()
-        if path:
-            self.audio = SoundLoader.load(path)
-        if self.audio:
-            self.audio_path = path
-            self.audio_title = title
-            self.audio.play()
-            self.ids.now_playing_label.text = title
-            self.ids.play_button.text = 'Pause'
-            self.audio.bind(on_stop=self.on_stop)
-    def on_stop(self, obj):
-        #changes the play/pause button text to play
-        self.ids.play_button.text = "Play"
+            self.audio = None
+        if f['path']:
+            audio = SoundLoader.load(f['path'])
+            if audio:
+                #if the audio file loaded successfully
+                audio.play()
+                self.ids.now_playing_label.text = f['title']
+                self.ids.now_playing_artist.text = f['artist']
+                self.ids.play_button.text = 'Pause'
+                audio.bind(on_stop=self.play)
+                self.audio = audio
+                return
+        #The audio file failed to load, try playing next file
+        self.play()
+    #def on_stop(self, obj):
+    #    if len(self.audio_list) > 0:
+    #        play(self.audio_list)
+    #    else:
+    #        #changes the play/pause button text to play
+    #        self.ids.play_button.text = "Play"
     def play_pause(self):
         if self.audio:
             if self.audio.state == 'play':
                 #store the audio position so it can resume from the correct place
                 self.audio_pos = self.audio.get_pos()
+                #avoid playing the next song when playback stops
+                self.audio.unbind(on_stop=self.play)
                 self.audio.stop()
                 self.ids.play_button.text = 'Play'
             else:
+                #rebind on stop event
+                self.audio.bind(on_stop=self.play)
                 self.audio.play()
                 #seek to the position that the audio was paused at
                 self.audio.seek(self.audio_pos)
                 self.ids.play_button.text = 'Pause'
+        else:
+            self.play()
