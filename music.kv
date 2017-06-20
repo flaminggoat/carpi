@@ -1,5 +1,18 @@
 #:kivy 1.10.1
 
+<IconButton>
+    icon: ""
+    scale: 1
+    background_color: 1,0,0,0
+    ihw: self.height*self.scale
+    ix: self.x + self.width/2 - self.ihw/2
+    iy: self.y + self.height/2 - self.ihw/2
+    Image:
+        source: root.icon        
+        size: root.ihw, root.ihw
+        x: root.ix
+        y: root.iy
+
 <MusicFileBar>
     Label:
         text: self.parent.title
@@ -61,15 +74,25 @@
                     size_hint: 1, 0.1
                     id: now_playing_artist 
             BoxLayout:
-                size_hint: 1,0.2
-                Button:
-                    text: 'Prev'
-                Button:
+                size_hint_y: 0.2
+                padding: dp(80), 0
+                IconButton:
+                    icon: 'icons/prev.png'
+                    scale: 0.5
+                IconButton:
                     id: play_button
-                    text: 'Play'
                     on_release: root.play_pause()
-                Button:
-                    text: 'Next'
+                    icon: 'icons/play.png'
+                    current_icon: 1
+                    Image:
+                        source: 'icons/pause.png'
+                        color: 1,1,1,0
+                        size: self.parent.ihw, self.parent.ihw
+                        x: self.parent.ix
+                        y: self.parent.iy
+                IconButton:
+                    scale: 0.5
+                    icon: 'icons/next.png'
                     on_release: root.play()
 
 

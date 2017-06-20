@@ -1,13 +1,34 @@
 from kivy.uix.screenmanager import Screen
 from kivy.uix.recycleview import RecycleView
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.image import Image
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.core.audio import SoundLoader
+from kivy.clock import Clock
 import fnmatch
 import os
 from tinytag import TinyTag
 
 music_screen = None
+
+class IconButton(Button):
+    def __init__(self, **kwargs):
+        super(IconButton, self).__init__(**kwargs)
+        self.scale = 1
+        self.current_icon = 0
+    #def add_icon(self,path):
+    #    hw = self.height*self.scale 
+    #    x = self.x + self.width/2 - hw/2
+    #    y = self.y + self.height/2 - hw/2
+    #    self.add_widget(Image(source=icon,size=(hw,hw),x=x,y=y,color=(1,1,1,0)))
+    def set_icon(self, number):
+        if number < len(self.children) and number >= 0:
+            self.children[self.current_icon].color = (1,1,1,0)
+            self.children[number].color = (1,1,1,1)
+            self.current_icon = number
+        else:
+            print('cant set icon')
 
 class MusicFileBar(BoxLayout):
     title = StringProperty("")
@@ -71,8 +92,11 @@ class MusicScreen(Screen):
     def play(self, obj=None):
         if len(self.audio_list) <= 0:
             #end of song queue reached
-            if self.audio.state != 'play':
-                self.ids.play_button.text = 'Play'
+            try:
+                if self.audio.state != 'play':
+                    self.ids.play_button.set_icon(1)
+            except AttributeError:
+                pass
             return
         f = self.audio_list.pop(0)
         if self.audio:
@@ -87,7 +111,7 @@ class MusicScreen(Screen):
                 audio.play()
                 self.ids.now_playing_label.text = f['title']
                 self.ids.now_playing_artist.text = f['artist']
-                self.ids.play_button.text = 'Pause'
+                self.ids.play_button.set_icon(0)
                 audio.bind(on_stop=self.play)
                 self.audio = audio
                 return
@@ -100,20 +124,20 @@ class MusicScreen(Screen):
     #        #changes the play/pause button text to play
     #        self.ids.play_button.text = "Play"
     def play_pause(self):
-        if self.audio:
+        try:
             if self.audio.state == 'play':
                 #store the audio position so it can resume from the correct place
                 self.audio_pos = self.audio.get_pos()
                 #avoid playing the next song when playback stops
                 self.audio.unbind(on_stop=self.play)
                 self.audio.stop()
-                self.ids.play_button.text = 'Play'
+                self.ids.play_button.set_icon(1)
             else:
                 #rebind on stop event
                 self.audio.bind(on_stop=self.play)
                 self.audio.play()
                 #seek to the position that the audio was paused at
                 self.audio.seek(self.audio_pos)
-                self.ids.play_button.text = 'Pause'
-        else:
+                self.ids.play_button.set_icon(0)
+        except AttributeError:
             self.play()
